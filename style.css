@@ -158,8 +158,9 @@ button,input{font:inherit}
   border-bottom:1px solid var(--line);
 }
 .hero__media{
-  height: 300px;
-   length: 20px;
+  height: auto;
+  max-width: 100%;
+  display: block;
   border-radius: var(--radius-2);
   background:
     linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.65)),
@@ -732,6 +733,7 @@ button,input{font:inherit}
 @media (min-width: 1050px){
   .grid{grid-template-columns: repeat(3, minmax(0, 1fr))}
 }
+
 
 
 
