@@ -167,7 +167,7 @@ button,input{font:inherit}
   border: 1px solid rgba(255,255,255,.10);
 }
 .hero__content{
-  margin-top:-110px;
+  margin-top:-100px;
   padding-bottom:12px;
 }
 .pill{
@@ -522,3 +522,4 @@ button,input{font:inherit}
 @media (min-width: 1050px){
   .grid{grid-template-columns: repeat(3, minmax(0, 1fr))}
 }
+
