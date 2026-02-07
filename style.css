@@ -158,12 +158,12 @@ button,input{font:inherit}
   border-bottom:1px solid var(--line);
 }
 .hero__media{
-  height: 360px;
+  height: 3200px;
    length: 20px;
   border-radius: var(--radius-2);
   background:
     linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.65)),
-    url("img/hero-banner.jpg") center 30%;
+    url("img/hero-banner.jpg") center 30% \ cover no-repeat;
   box-shadow: var(--shadow);
   border: 1px solid rgba(255,255,255,.10);
 }
