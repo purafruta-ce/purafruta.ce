@@ -159,10 +159,11 @@ button,input{font:inherit}
 }
 .hero__media{
   height: 360px;
+   length: 20px;
   border-radius: var(--radius-2);
   background:
     linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.65)),
-    url("img/hero-banner.jpg") center 100% / cover no-repeat;
+    url("img/hero-banner.jpg") center 30% / cover no-repeat;
   box-shadow: var(--shadow);
   border: 1px solid rgba(255,255,255,.10);
 }
@@ -731,6 +732,7 @@ button,input{font:inherit}
 @media (min-width: 1050px){
   .grid{grid-template-columns: repeat(3, minmax(0, 1fr))}
 }
+
 
 
 
