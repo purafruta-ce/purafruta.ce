@@ -158,16 +158,22 @@ button,input{font:inherit}
   border-bottom:1px solid var(--line);
 }
 .hero__media{
-  height: auto;
-  max-width: 100%;
-  display: block;
+  width: 100%;
+  min-height: clamp(240px, 38vw, 520px); /* altura responsiva do banner */
   border-radius: var(--radius-2);
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.65)),
-    url("img/hero-banner.jpg") center 30% / cover no-repeat;
+  display: block;
   box-shadow: var(--shadow);
   border: 1px solid rgba(255,255,255,.10);
+
+  background-image:
+    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.65)),
+    url("img/hero-banner.jpg");
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center top; /* prioriza a parte de cima */
 }
+
 .hero__content{
   margin-top:-110px;
   padding-bottom:12px;
@@ -733,6 +739,7 @@ button,input{font:inherit}
 @media (min-width: 1050px){
   .grid{grid-template-columns: repeat(3, minmax(0, 1fr))}
 }
+
 
 
 
