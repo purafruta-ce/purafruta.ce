@@ -54,6 +54,11 @@
         <a href="#contato">Contato</a>
       </nav>
 
+      <button class="cart-btn" type="button" aria-label="Abrir carrinho" id="cartBtn">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
+
       <button class="hamb" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menuMobile">
         <span></span><span></span><span></span>
       </button>
@@ -66,6 +71,34 @@
       <a href="#contato">Contato</a>
     </nav>
   </header>
+
+  <!-- Cart Modal -->
+  <div class="cart-modal" id="cartModal" aria-hidden="true">
+    <div class="cart-modal__overlay" id="cartOverlay"></div>
+    <div class="cart-modal__content">
+      <div class="cart-modal__header">
+        <h2>Seu Carrinho</h2>
+        <button type="button" class="cart-modal__close" id="closeCartBtn" aria-label="Fechar carrinho">✕</button>
+      </div>
+
+      <div class="cart-modal__body" id="cartItems">
+        <p class="cart-empty">Seu carrinho está vazio</p>
+      </div>
+
+      <div class="cart-modal__footer">
+        <div class="cart-total">
+          <span>Total:</span>
+          <strong id="cartTotal">R$ 0,00</strong>
+        </div>
+        <button type="button" class="btn btn--primary cart-modal__btn-order" id="cartOrderBtn">
+          Confirmar Pedido
+        </button>
+        <button type="button" class="btn btn--ghost cart-modal__btn-clear" id="cartClearBtn">
+          Limpar Carrinho
+        </button>
+      </div>
+    </div>
+  </div>
 
   <main id="conteudo">
     <!-- Hero -->
@@ -145,9 +178,9 @@
                   <span class="price__label">Preço</span>
                   <strong>R$ 15,00</strong>
                 </div>
-                <button class="btn btn--wa js-order" type="button"
-                  data-product="Rolinhos de Frutas" data-price="15,00">
-                  Pedir
+                <button class="btn btn--wa js-add-cart" type="button"
+                  data-product="Rolinhos de Frutas" data-price="15.00">
+                  Carrinho
                 </button>
               </div>
             </div>
@@ -164,7 +197,7 @@
               <p class="muted">Barra nutritiva feita com frutas frescas selecionadas.</p>
               <div class="card__bottom">
                 <div class="price"><span class="price__label">Preço</span><strong>R$ 20,00</strong></div>
-                <button class="btn btn--wa js-order" type="button" data-product="Barrinha FIT (Frutas)" data-price="20,00">Pedir</button>
+                <button class="btn btn--wa js-add-cart" type="button" data-product="Barrinha FIT (Frutas)" data-price="20.00">Carrinho</button>
               </div>
             </div>
           </article>
@@ -179,7 +212,7 @@
               <p class="muted">Crocante, com blend natural de castanhas e sementes.</p>
               <div class="card__bottom">
                 <div class="price"><span class="price__label">Preço</span><strong>R$ 18,00</strong></div>
-                <button class="btn btn--wa js-order" type="button" data-product="Barrinha FIT (Castanhas e Sementes)" data-price="18,00">Pedir</button>
+                <button class="btn btn--wa js-add-cart" type="button" data-product="Barrinha FIT (Castanhas e Sementes)" data-price="18.00">Carrinho</button>
               </div>
             </div>
           </article>
@@ -194,7 +227,7 @@
               <p class="muted">Docinhos artesanais feitos com frutas frescas.</p>
               <div class="card__bottom">
                 <div class="price"><span class="price__label">Preço</span><strong>R$ 20,00</strong></div>
-                <button class="btn btn--wa js-order" type="button" data-product="Docinhos de Frutas" data-price="20,00">Pedir</button>
+                <button class="btn btn--wa js-add-cart" type="button" data-product="Docinhos de Frutas" data-price="20.00">Carrinho</button>
               </div>
             </div>
           </article>
@@ -209,7 +242,7 @@
               <p class="muted">Brownie caseiro, super saboroso e prático.</p>
               <div class="card__bottom">
                 <div class="price"><span class="price__label">Preço</span><strong>R$ 25,00</strong></div>
-                <button class="btn btn--wa js-order" type="button" data-product="Brownie" data-price="25,00">Pedir</button>
+                <button class="btn btn--wa js-add-cart" type="button" data-product="Brownie" data-price="25.00">Carrinho</button>
               </div>
             </div>
           </article>
@@ -224,7 +257,7 @@
               <p class="muted">Frutas desidratadas naturalmente, sem aditivos.</p>
               <div class="card__bottom">
                 <div class="price"><span class="price__label">Preço</span><strong>R$ 15,00</strong></div>
-                <button class="btn btn--wa js-order" type="button" data-product="Frutas Desidratadas" data-price="15,00">Pedir</button>
+                <button class="btn btn--wa js-add-cart" type="button" data-product="Frutas Desidratadas" data-price="15.00">Carrinho</button>
               </div>
             </div>
           </article>
@@ -239,7 +272,7 @@
               <p class="muted">Tirinhas finas e práticas de frutas naturais.</p>
               <div class="card__bottom">
                 <div class="price"><span class="price__label">Preço</span><strong>R$ 15,00</strong></div>
-                <button class="btn btn--wa js-order" type="button" data-product="Tirinhas de Frutas" data-price="15,00">Pedir</button>
+                <button class="btn btn--wa js-add-cart" type="button" data-product="Tirinhas de Frutas" data-price="15.00">Carrinho</button>
               </div>
             </div>
           </article>
@@ -254,7 +287,7 @@
               <p class="muted">Porção grande de rolinhos super práticos.</p>
               <div class="card__bottom">
                 <div class="price"><span class="price__label">Preço</span><strong>R$ 20,00</strong></div>
-                <button class="btn btn--wa js-order" type="button" data-product="Rolinhos de Fruta (G)" data-price="20,00">Pedir</button>
+                <button class="btn btn--wa js-add-cart" type="button" data-product="Rolinhos de Fruta (G)" data-price="20.00">Carrinho</button>
               </div>
             </div>
           </article>
@@ -299,7 +332,7 @@
 
           <div class="info">
             <h3>🕒 Horários</h3>
-            <p><strong>Segunda a Sábado</strong><br>Por agendamento<br><strong>Domingo</strong><br>Fechado</p>
+            <p><strong>De segunda a sexta</strong><br>8:00/11:00 e 13:00/17:00<br><strong>Sábado e domingo</strong><br>Fechado</p>
           </div>
 
           <div class="info">
@@ -318,7 +351,7 @@
       <div class="container footer__row">
         <div>
           <strong>Pura Fruta</strong>
-          <p class="muted">Rolinhos 100% natural • Fortaleza–CE</p>
+          <p class="muted">Frutas 100% natural • Fortaleza–CE</p>
         </div>
 
         <div class="footer__links">
@@ -345,3 +378,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
