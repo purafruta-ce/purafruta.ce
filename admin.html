@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pura Fruta • Admin Estoque</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header class="top">
+      <h1>Admin • Estoque</h1>
+      <button id="logoutBtn" class="btn btn-ghost" type="button" hidden>Sair</button>
+    </header>
+
+    <!-- Login -->
+    <section id="loginBox" class="card">
+      <h2>Entrar</h2>
+      <p class="muted">Apenas administradores conseguem alterar estoque.</p>
+
+      <form id="loginForm" class="form">
+        <label>
+          Email
+          <input id="email" type="email" autocomplete="email" required />
+        </label>
+        <label>
+          Senha
+          <input id="password" type="password" autocomplete="current-password" required />
+        </label>
+
+        <button class="btn btn-primary" type="submit">Entrar</button>
+        <p id="loginMsg" class="msg" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- Painel -->
+    <section id="panel" class="card" hidden>
+      <div class="panel-head">
+        <div>
+          <h2>Produtos</h2>
+          <p class="muted">Edite o estoque e clique em <b>Salvar</b>.</p>
+        </div>
+
+        <button id="refreshBtn" class="btn btn-ghost" type="button">Recarregar</button>
+      </div>
+
+      <div id="tableWrap" class="table-wrap" aria-live="polite"></div>
+      <p id="panelMsg" class="msg" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
