@@ -159,7 +159,7 @@ button,input{font:inherit}
 }
 .hero__media{
   width: 100%;
-  min-height: clamp(240px, 38vw, 520px); /* altura responsiva do banner */
+  min-height: clamp(240px, 38vw, 520px);
   border-radius: var(--radius-2);
   display: block;
   box-shadow: var(--shadow);
@@ -171,7 +171,7 @@ button,input{font:inherit}
 
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center top; /* prioriza a parte de cima */
+  background-position: center top;
 }
 
 .hero__content{
@@ -739,6 +739,28 @@ button,input{font:inherit}
 @media (min-width: 1050px){
   .grid{grid-template-columns: repeat(3, minmax(0, 1fr))}
 }
+
+/* =========================
+   STOCK UI (Supabase)
+========================= */
+.stock{
+  display:block;
+  margin-top:6px;
+  font-size:.85rem;
+  color: var(--muted);
+}
+.stock.is-low{ color: #ffd37a; }
+.stock.is-out{ color: #ff8c8c; }
+
+.btn.is-soldout{
+  opacity:.7;
+  cursor:not-allowed;
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.14);
+  box-shadow:none;
+}
+.btn.is-soldout:active{transform:none}
+
 
 
 
