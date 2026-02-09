@@ -1,13 +1,23 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 // =============================
 // CONFIG
 // =============================
-const PHONE = "5585985614777"; // WhatsApp Pura Fruta
+const PHONE = "5585985614777";
 const DEFAULT_MESSAGE = "Olá! 👋 Gostaria de fazer um pedido na Pura Fruta. Pode me ajudar?";
 
+// >>>>> PREENCHA AQUI <<<<<
+const SUPABASE_URL = "https://phprflfozghmzzlewljx.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBocHJmbGZvemdobXp6bGV3bGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2NTMwMjYsImV4cCI6MjA4NjIyOTAyNn0.l3ShFArGCK-raOOcLUjkE8M8F0fXyM4WoHaTT6wBt4Q";
+const CHECKOUT_FUNCTION_URL = "https://phprflfozghmzzlewljx.supabase.co/functions/v1/checkout";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // =============================
-// CART STATE
+// STATE
 // =============================
 let cart = JSON.parse(localStorage.getItem("purafruta_cart")) || [];
+let stockMap = {}; // sku -> stock (inteiro)
 
 // =============================
 // HELPERS
@@ -29,44 +39,124 @@ function formatPrice(price) {
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(num);
 }
 
-// =============================
-// CART FUNCTIONS
-// =============================
 function saveCart() {
   localStorage.setItem("purafruta_cart", JSON.stringify(cart));
 }
 
-function addToCart(product, price) {
-  const existingItem = cart.find(item => item.product === product);
+function getSkuFromButton(btn) {
+  return btn.dataset.sku || btn.dataset.product;
+}
+
+function getAvailableStockForSku(sku) {
+  const raw = Number(stockMap[sku] ?? 0);
+  const inCart = cart
+    .filter(i => (i.sku || i.product) === sku)
+    .reduce((s, i) => s + i.quantity, 0);
+
+  return Math.max(0, raw - inCart);
+}
+
+// =============================
+// STOCK UI
+// =============================
+function refreshStockUI() {
+  document.querySelectorAll(".card").forEach(card => {
+    const sku = card.dataset.sku;
+    if (!sku) return;
+
+    const available = getAvailableStockForSku(sku);
+
+    const stockEl = card.querySelector(".stock");
+    if (stockEl) {
+      stockEl.classList.remove("is-low", "is-out");
+      if (available <= 0) {
+        stockEl.textContent = "Esgotado";
+        stockEl.classList.add("is-out");
+      } else {
+        stockEl.textContent = `Em estoque: ${available}`;
+        if (available <= 5) stockEl.classList.add("is-low");
+      }
+    }
+
+    const btn = card.querySelector(".js-add-cart");
+    if (btn) {
+      const soldout = available <= 0;
+      btn.disabled = soldout;
+      btn.classList.toggle("is-soldout", soldout);
+      btn.textContent = soldout ? "Esgotado" : "Carrinho";
+    }
+  });
+}
+
+async function loadStockFromDB() {
+  const { data, error } = await supabase
+    .from("products")
+    .select("sku, stock");
+
+  if (error) {
+    console.error(error);
+    toast("Falha ao carregar estoque.");
+    return;
+  }
+
+  stockMap = {};
+  for (const p of data) stockMap[p.sku] = p.stock;
+
+  refreshStockUI();
+}
+
+// =============================
+// CART
+// =============================
+function addToCart(product, price, sku) {
+  const key = sku || product;
+  const available = getAvailableStockForSku(key);
+
+  if (available <= 0) {
+    toast("Sem estoque disponível.");
+    refreshStockUI();
+    return;
+  }
+
+  const existingItem = cart.find(item => (item.sku || item.product) === key);
   if (existingItem) {
     existingItem.quantity += 1;
   } else {
-    cart.push({ product, price: parseFloat(price), quantity: 1 });
+    cart.push({ sku: key, product, price: parseFloat(price), quantity: 1 });
   }
+
   saveCart();
   updateCartUI();
+  refreshStockUI();
   toast(`${product} adicionado ao carrinho!`);
 }
 
-function removeFromCart(product) {
-  cart = cart.filter(item => item.product !== product);
+function removeFromCart(productName) {
+  cart = cart.filter(item => item.product !== productName);
   saveCart();
   updateCartUI();
+  refreshStockUI();
 }
 
-function updateCartItemQty(product, quantity) {
-  const item = cart.find(item => item.product === product);
-  if (item) {
-    item.quantity = Math.max(1, quantity);
-    saveCart();
-    updateCartUI();
-  }
+function updateCartItemQty(productName, nextQty) {
+  const item = cart.find(i => i.product === productName);
+  if (!item) return;
+
+  const key = item.sku || item.product;
+  const maxAllowed = Number(stockMap[key] ?? 0);
+
+  item.quantity = Math.min(Math.max(1, nextQty), maxAllowed);
+
+  saveCart();
+  updateCartUI();
+  refreshStockUI();
 }
 
 function clearCart() {
   cart = [];
   saveCart();
   updateCartUI();
+  refreshStockUI();
 }
 
 function getCartTotal() {
@@ -79,11 +169,9 @@ function updateCartUI() {
   const totalEl = document.getElementById("cartTotal");
   const cartOrderBtn = document.getElementById("cartOrderBtn");
 
-  // Update badge
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   badge.textContent = totalItems;
 
-  // Update items display
   if (cart.length === 0) {
     itemsContainer.innerHTML = '<p class="cart-empty">Seu carrinho está vazio</p>';
     cartOrderBtn.disabled = true;
@@ -102,9 +190,9 @@ function updateCartUI() {
         </div>
       </div>
     `).join("");
+
     cartOrderBtn.disabled = false;
 
-    // Add event listeners for quantity controls
     document.querySelectorAll(".qty-minus").forEach(btn => {
       btn.addEventListener("click", () => {
         const product = btn.dataset.product;
@@ -117,18 +205,22 @@ function updateCartUI() {
       btn.addEventListener("click", () => {
         const product = btn.dataset.product;
         const item = cart.find(i => i.product === product);
-        if (item) updateCartItemQty(product, item.quantity + 1);
+        if (!item) return;
+
+        const key = item.sku || item.product;
+        if (getAvailableStockForSku(key) <= 0) {
+          toast("Limite do estoque atingido.");
+          return;
+        }
+        updateCartItemQty(product, item.quantity + 1);
       });
     });
 
     document.querySelectorAll(".cart-item__remove").forEach(btn => {
-      btn.addEventListener("click", () => {
-        removeFromCart(btn.dataset.product);
-      });
+      btn.addEventListener("click", () => removeFromCart(btn.dataset.product));
     });
   }
 
-  // Update total
   totalEl.textContent = formatPrice(getCartTotal());
 }
 
@@ -144,21 +236,20 @@ function toggleCartModal() {
 const hamb = document.querySelector(".hamb");
 const menuMobile = document.getElementById("menuMobile");
 
-hamb.addEventListener("click", () => {
+hamb?.addEventListener("click", () => {
   const isOpen = menuMobile.classList.toggle("is-open");
   hamb.setAttribute("aria-expanded", String(isOpen));
 });
 
-// Fecha menu ao clicar
-menuMobile.querySelectorAll("a").forEach(a => {
+menuMobile?.querySelectorAll("a").forEach(a => {
   a.addEventListener("click", () => {
     menuMobile.classList.remove("is-open");
     hamb.setAttribute("aria-expanded", "false");
   });
 });
 
-// Fecha ao clicar fora
 document.addEventListener("click", (e) => {
+  if (!menuMobile || !hamb) return;
   const clickedInside = menuMobile.contains(e.target) || hamb.contains(e.target);
   if (!clickedInside && menuMobile.classList.contains("is-open")) {
     menuMobile.classList.remove("is-open");
@@ -170,16 +261,15 @@ document.addEventListener("click", (e) => {
 // CART MODAL CONTROLS
 // =============================
 const cartBtn = document.getElementById("cartBtn");
-const cartModal = document.getElementById("cartModal");
 const cartOverlay = document.getElementById("cartOverlay");
 const closeCartBtn = document.getElementById("closeCartBtn");
 const cartClearBtn = document.getElementById("cartClearBtn");
 
-cartBtn.addEventListener("click", toggleCartModal);
-closeCartBtn.addEventListener("click", toggleCartModal);
-cartOverlay.addEventListener("click", toggleCartModal);
+cartBtn?.addEventListener("click", toggleCartModal);
+closeCartBtn?.addEventListener("click", toggleCartModal);
+cartOverlay?.addEventListener("click", toggleCartModal);
 
-cartClearBtn.addEventListener("click", () => {
+cartClearBtn?.addEventListener("click", () => {
   if (cart.length > 0 && confirm("Deseja limpar o carrinho?")) {
     clearCart();
     toast("Carrinho limpo!");
@@ -191,34 +281,59 @@ cartClearBtn.addEventListener("click", () => {
 // =============================
 const ctaWhats = document.getElementById("ctaWhats");
 const fabWhats = document.getElementById("fabWhats");
-ctaWhats.href = waLink(DEFAULT_MESSAGE);
-fabWhats.href = waLink(DEFAULT_MESSAGE);
+if (ctaWhats) ctaWhats.href = waLink(DEFAULT_MESSAGE);
+if (fabWhats) fabWhats.href = waLink(DEFAULT_MESSAGE);
 
 // =============================
-// CART ORDER
+// CART ORDER (checkout -> baixa estoque -> abre WhatsApp)
 // =============================
 const cartOrderBtn = document.getElementById("cartOrderBtn");
 
-cartOrderBtn.addEventListener("click", () => {
+cartOrderBtn?.addEventListener("click", async () => {
   if (cart.length === 0) {
     toast("Carrinho vazio!");
     return;
   }
 
+  const items = cart.map(i => ({
+    sku: i.sku || i.product,
+    qty: i.quantity
+  }));
+
+  let resp;
+  try {
+    resp = await fetch(CHECKOUT_FUNCTION_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items })
+    });
+  } catch (e) {
+    console.error(e);
+    toast("Falha de conexão. Tente novamente.");
+    return;
+  }
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    toast(err.message || "Estoque insuficiente. Atualize e tente novamente.");
+    await loadStockFromDB();
+    updateCartUI();
+    return;
+  }
+
+  // ok: baixou estoque no backend
   let message = "Olá! \nGostaria de fazer este pedido na Pura Fruta:\n\n";
-  
   cart.forEach(item => {
     message += `${item.product}\n   Qtd: ${item.quantity} x ${formatPrice(item.price)}\n`;
   });
-
   message += `\n Total: ${formatPrice(getCartTotal())}\n\nAtende Fortaleza-CE? Como funciona entrega/retirada?`;
 
   window.open(waLink(message), "_blank", "noopener");
-  
-  // Fechar modal
+
   toggleCartModal();
   clearCart();
-  toast("Pedido enviado com sucesso!");
+  await loadStockFromDB();
+  toast("Pedido confirmado! ✅");
 });
 
 // =============================
@@ -228,7 +343,8 @@ document.querySelectorAll(".js-add-cart").forEach(btn => {
   btn.addEventListener("click", () => {
     const product = btn.dataset.product || "Produto";
     const price = btn.dataset.price || "0";
-    addToCart(product, price);
+    const sku = getSkuFromButton(btn);
+    addToCart(product, price, sku);
   });
 });
 
@@ -243,9 +359,9 @@ const hint = document.getElementById("resultHint");
 let activeFilter = "all";
 
 function applyFilters() {
-  const q = (searchInput.value || "").trim().toLowerCase();
-
+  const q = (searchInput?.value || "").trim().toLowerCase();
   let visible = 0;
+
   for (const card of cards) {
     const name = (card.dataset.name || "").toLowerCase();
     const cat = (card.dataset.category || "").toLowerCase();
@@ -258,12 +374,14 @@ function applyFilters() {
     if (show) visible++;
   }
 
-  hint.textContent = visible === 0
-    ? "Nenhum item encontrado. Tente outra busca ou filtre novamente."
-    : `${visible} item(ns) encontrado(s).`;
+  if (hint) {
+    hint.textContent = visible === 0
+      ? "Nenhum item encontrado. Tente outra busca ou filtre novamente."
+      : `${visible} item(ns) encontrado(s).`;
+  }
 }
 
-searchInput.addEventListener("input", applyFilters);
+searchInput?.addEventListener("input", applyFilters);
 
 chips.forEach(chip => {
   chip.addEventListener("click", () => {
@@ -274,7 +392,12 @@ chips.forEach(chip => {
   });
 });
 
-// Inicial
+// =============================
+// INIT
+// =============================
 applyFilters();
 updateCartUI();
+await loadStockFromDB();
+refreshStockUI();
+
 
