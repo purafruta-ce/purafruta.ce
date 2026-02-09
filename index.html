@@ -165,7 +165,7 @@
         <div class="grid" id="productsGrid">
 
           <!-- Produto: Destaque -->
-          <article class="card" data-category="destaque snacks" data-name="Rolinhos de Frutas" data-price="15,00">
+          <article class="card" data-sku="rolinhos" data-category="destaque snacks" data-name="Rolinhos de Frutas" data-price="15,00">
             <div class="card__img" style="background-image:url('img/rolinho.jpg')"></div>
             <div class="card__body">
               <div class="card__top">
@@ -177,8 +177,10 @@
                 <div class="price">
                   <span class="price__label">Preço</span>
                   <strong>R$ 15,00</strong>
+                  <span class="stock" aria-live="polite">Carregando estoque…</span>
                 </div>
                 <button class="btn btn--wa js-add-cart" type="button"
+                  data-sku="rolinhos"
                   data-product="Rolinhos de Frutas" data-price="15.00">
                   Carrinho
                 </button>
@@ -187,7 +189,7 @@
           </article>
 
           <!-- Produto -->
-          <article class="card" data-category="barrinhas" data-name="Barrinha FIT (Frutas)" data-price="20,00">
+          <article class="card" data-sku="barrinha-fit-frutas" data-category="barrinhas" data-name="Barrinha FIT (Frutas)" data-price="20,00">
             <div class="card__img" style="background-image:url('img/product-barras.jpg')"></div>
             <div class="card__body">
               <div class="card__top">
@@ -196,13 +198,19 @@
               </div>
               <p class="muted">Barra nutritiva feita com frutas frescas selecionadas.</p>
               <div class="card__bottom">
-                <div class="price"><span class="price__label">Preço</span><strong>R$ 20,00</strong></div>
-                <button class="btn btn--wa js-add-cart" type="button" data-product="Barrinha FIT (Frutas)" data-price="20.00">Carrinho</button>
+                <div class="price">
+                  <span class="price__label">Preço</span>
+                  <strong>R$ 20,00</strong>
+                  <span class="stock" aria-live="polite">Carregando estoque…</span>
+                </div>
+                <button class="btn btn--wa js-add-cart" type="button"
+                  data-sku="barrinha-fit-frutas"
+                  data-product="Barrinha FIT (Frutas)" data-price="20.00">Carrinho</button>
               </div>
             </div>
           </article>
 
-          <article class="card" data-category="barrinhas" data-name="Barrinha FIT (Castanhas e Sementes)" data-price="18,00">
+          <article class="card" data-sku="barrinha-fit-sementes" data-category="barrinhas" data-name="Barrinha FIT (Castanhas e Sementes)" data-price="18,00">
             <div class="card__img" style="background-image:url('img/barrinhasemente.jpg')"></div>
             <div class="card__body">
               <div class="card__top">
@@ -211,13 +219,19 @@
               </div>
               <p class="muted">Crocante, com blend natural de castanhas e sementes.</p>
               <div class="card__bottom">
-                <div class="price"><span class="price__label">Preço</span><strong>R$ 18,00</strong></div>
-                <button class="btn btn--wa js-add-cart" type="button" data-product="Barrinha FIT (Castanhas e Sementes)" data-price="18.00">Carrinho</button>
+                <div class="price">
+                  <span class="price__label">Preço</span>
+                  <strong>R$ 18,00</strong>
+                  <span class="stock" aria-live="polite">Carregando estoque…</span>
+                </div>
+                <button class="btn btn--wa js-add-cart" type="button"
+                  data-sku="barrinha-fit-sementes"
+                  data-product="Barrinha FIT (Castanhas e Sementes)" data-price="18.00">Carrinho</button>
               </div>
             </div>
           </article>
 
-          <article class="card" data-category="doces" data-name="Docinhos de Frutas" data-price="20,00">
+          <article class="card" data-sku="docinhos" data-category="doces" data-name="Docinhos de Frutas" data-price="20,00">
             <div class="card__img" style="background-image:url('img/product-snacks.jpg')"></div>
             <div class="card__body">
               <div class="card__top">
@@ -226,13 +240,19 @@
               </div>
               <p class="muted">Docinhos artesanais feitos com frutas frescas.</p>
               <div class="card__bottom">
-                <div class="price"><span class="price__label">Preço</span><strong>R$ 20,00</strong></div>
-                <button class="btn btn--wa js-add-cart" type="button" data-product="Docinhos de Frutas" data-price="20.00">Carrinho</button>
+                <div class="price">
+                  <span class="price__label">Preço</span>
+                  <strong>R$ 20,00</strong>
+                  <span class="stock" aria-live="polite">Carregando estoque…</span>
+                </div>
+                <button class="btn btn--wa js-add-cart" type="button"
+                  data-sku="docinhos"
+                  data-product="Docinhos de Frutas" data-price="20.00">Carrinho</button>
               </div>
             </div>
           </article>
 
-          <article class="card" data-category="doces" data-name="Brownie" data-price="25,00">
+          <article class="card" data-sku="brownie" data-category="doces" data-name="Brownie" data-price="25,00">
             <div class="card__img" style="background-image:url('img/brownie.jpg')"></div>
             <div class="card__body">
               <div class="card__top">
@@ -241,13 +261,19 @@
               </div>
               <p class="muted">Brownie caseiro, super saboroso e prático.</p>
               <div class="card__bottom">
-                <div class="price"><span class="price__label">Preço</span><strong>R$ 25,00</strong></div>
-                <button class="btn btn--wa js-add-cart" type="button" data-product="Brownie" data-price="25.00">Carrinho</button>
+                <div class="price">
+                  <span class="price__label">Preço</span>
+                  <strong>R$ 25,00</strong>
+                  <span class="stock" aria-live="polite">Carregando estoque…</span>
+                </div>
+                <button class="btn btn--wa js-add-cart" type="button"
+                  data-sku="brownie"
+                  data-product="Brownie" data-price="25.00">Carrinho</button>
               </div>
             </div>
           </article>
 
-          <article class="card" data-category="snacks" data-name="Frutas Desidratadas" data-price="15,00">
+          <article class="card" data-sku="desidratadas" data-category="snacks" data-name="Frutas Desidratadas" data-price="15,00">
             <div class="card__img" style="background-image:url('img/desidratada.jpg')"></div>
             <div class="card__body">
               <div class="card__top">
@@ -256,13 +282,19 @@
               </div>
               <p class="muted">Frutas desidratadas naturalmente, sem aditivos.</p>
               <div class="card__bottom">
-                <div class="price"><span class="price__label">Preço</span><strong>R$ 15,00</strong></div>
-                <button class="btn btn--wa js-add-cart" type="button" data-product="Frutas Desidratadas" data-price="15.00">Carrinho</button>
+                <div class="price">
+                  <span class="price__label">Preço</span>
+                  <strong>R$ 15,00</strong>
+                  <span class="stock" aria-live="polite">Carregando estoque…</span>
+                </div>
+                <button class="btn btn--wa js-add-cart" type="button"
+                  data-sku="desidratadas"
+                  data-product="Frutas Desidratadas" data-price="15.00">Carrinho</button>
               </div>
             </div>
           </article>
 
-          <article class="card" data-category="snacks" data-name="Tirinhas de Frutas" data-price="15,00">
+          <article class="card" data-sku="tirinhas" data-category="snacks" data-name="Tirinhas de Frutas" data-price="15,00">
             <div class="card__img" style="background-image:url('img/rolinho-G\ \(2\).jpg')"></div>
             <div class="card__body">
               <div class="card__top">
@@ -271,13 +303,19 @@
               </div>
               <p class="muted">Tirinhas finas e práticas de frutas naturais.</p>
               <div class="card__bottom">
-                <div class="price"><span class="price__label">Preço</span><strong>R$ 15,00</strong></div>
-                <button class="btn btn--wa js-add-cart" type="button" data-product="Tirinhas de Frutas" data-price="15.00">Carrinho</button>
+                <div class="price">
+                  <span class="price__label">Preço</span>
+                  <strong>R$ 15,00</strong>
+                  <span class="stock" aria-live="polite">Carregando estoque…</span>
+                </div>
+                <button class="btn btn--wa js-add-cart" type="button"
+                  data-sku="tirinhas"
+                  data-product="Tirinhas de Frutas" data-price="15.00">Carrinho</button>
               </div>
             </div>
           </article>
 
-          <article class="card" data-category="snacks" data-name="Rolinhos de Fruta (G)" data-price="20,00">
+          <article class="card" data-sku="rolinhos-g" data-category="snacks" data-name="Rolinhos de Fruta (G)" data-price="20,00">
             <div class="card__img" style="background-image:url('img/rolinho_g.jpg')"></div>
             <div class="card__body">
               <div class="card__top">
@@ -286,8 +324,14 @@
               </div>
               <p class="muted">Porção grande de rolinhos super práticos.</p>
               <div class="card__bottom">
-                <div class="price"><span class="price__label">Preço</span><strong>R$ 20,00</strong></div>
-                <button class="btn btn--wa js-add-cart" type="button" data-product="Rolinhos de Fruta (G)" data-price="20.00">Carrinho</button>
+                <div class="price">
+                  <span class="price__label">Preço</span>
+                  <strong>R$ 20,00</strong>
+                  <span class="stock" aria-live="polite">Carregando estoque…</span>
+                </div>
+                <button class="btn btn--wa js-add-cart" type="button"
+                  data-sku="rolinhos-g"
+                  data-product="Rolinhos de Fruta (G)" data-price="20.00">Carrinho</button>
               </div>
             </div>
           </article>
@@ -375,7 +419,10 @@
   <!-- Toast -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="script.js"></script>
+  <!-- IMPORTANTE: module -->
+  <script type="module" src="script.js"></script>
 </body>
 </html>
+
+
 
